@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="VisitorIQ - Cloud-Native Visitor Management Platform"/>
+<meta name="theme-color" content="#0F2A4A"/>
+<title>VisitorIQ - Visitor Management</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0F2A4A;--teal:#0E7C7B;--teal-light:#E8F4F4;
+  --amber:#F59E0B;--red:#DC2626;--red-light:#FEF2F2;
+  --green:#059669;--green-light:#ECFDF5;
+  --purple:#7C3AED;--purple-light:#EDE9FE;
+  --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;
+  --slate-400:#94A3B8;--slate-500:#64748B;--slate-700:#334155;
+  --white:#fff;--text:#1E293B;
+  --radius:14px;--radius-sm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 20px rgba(0,0,0,.13);
+}
+body{font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:var(--slate-50);min-height:100vh}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+.hidden{display:none!important}
+
+/* ════ LOGIN PAGE ════════════════════════════════════════════════ */
+#login-screen{
+  min-height:100vh;display:flex;
+  background:linear-gradient(135deg,var(--navy) 0%,#1a4a6e 50%,var(--teal) 100%);
+}
+.login-left{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:48px 32px;
+}
+.login-right{
+  width:460px;background:var(--white);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:56px 48px;
+  box-shadow:-8px 0 40px rgba(0,0,0,.18);
+}
+/* hero left side */
+.login-hero-logo{font-size:3rem;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:6px}
+.login-hero-logo span{color:#5EEAD4}
+.login-hero-tag{color:rgba(255,255,255,.7);font-size:1.05rem;margin-bottom:48px}
+.login-feature{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;max-width:340px}
+.login-feature-icon{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.login-feature-text{color:rgba(255,255,255,.85);font-size:.92rem;line-height:1.55}
+.login-feature-title{font-weight:700;color:#fff;display:block;margin-bottom:2px}
+/* right panel */
+.login-panel-logo{font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:4px}
+.login-panel-logo span{color:var(--teal)}
+.login-panel-sub{color:var(--slate-500);font-size:.88rem;margin-bottom:32px}
+.login-panel-title{font-size:1.25rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.login-panel-desc{color:var(--slate-500);font-size:.88rem;margin-bottom:24px}
+
+.auth-form{width:100%}
+.auth-field{margin-bottom:18px}
+.auth-field label{display:block;font-size:.83rem;font-weight:700;color:var(--slate-700);margin-bottom:6px;letter-spacing:.01em}
+.auth-input{width:100%;padding:12px 14px;border:1.5px solid var(--slate-200);
+  border-radius:var(--radius-sm);font-size:.97rem;color:var(--text);transition:.15s;background:#fff}
+.auth-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
+.auth-input.error{border-color:var(--red)}
+.auth-input-wrap{position:relative}
+.auth-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--slate-400);font-size:1rem;padding:4px}
+.auth-btn{width:100%;padding:13px;background:var(--teal);color:#fff;border:none;
+  border-radius:var(--radius-sm);font-size:1rem;font-weight:700;cursor:pointer;transition:.18s;margin-top:4px}
+.auth-btn:hover{background:#0A6B6A;box-shadow:0 4px 14px rgba(14,124,123,.3)}
+.auth-btn:active{transform:scale(.99)}
+.auth-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.auth-link{background:none;border:none;color:var(--teal);font-size:.88rem;
+  font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px}
+.auth-link:hover{color:#0A6B6A}
+.auth-error{background:var(--red-light);color:var(--red);border-radius:var(--radius-sm);
+  padding:10px 14px;font-size:.85rem;font-weight:600;margin-bottom:16px;
+  display:flex;gap:8px;align-items:center}
+.auth-success{background:var(--green-light);color:var(--green);border-radius:var(--radius-sm);
+  padding:10px 14px;font-size:.85rem;font-weight:600;margin-bottom:16px;
+  display:flex;gap:8px;align-items:center}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--slate-400);font-size:.82rem}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--slate-200)}
+.login-credentials-hint{background:var(--slate-50);border:1px solid var(--slate-200);
+  border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:20px;font-size:.82rem;color:var(--slate-500)}
+.login-credentials-hint strong{color:var(--slate-700)}
+@media(max-width:860px){
+  .login-left{display:none}
+  .login-right{width:100%;padding:40px 28px}
+}
+@media(max-width:440px){
+  .login-right{padding:32px 20px}
+}
+
+/* ════ APP SHELL ═════════════════════════════════════════════════ */
+.app{display:flex;flex-direction:column;min-height:100vh}
+/* topbar */
+.topbar{background:var(--navy);color:#fff;padding:0 20px;display:flex;align-items:center;
+  justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.topbar-brand{font-size:1.25rem;font-weight:800;letter-spacing:-.01em}
+.topbar-brand span{color:#5EEAD4;font-size:.75rem;font-weight:500;
+  border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:2px 8px;margin-left:8px}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{background:none;border:none;color:rgba(255,255,255,.65);
+  padding:6px 13px;border-radius:20px;font-size:.83rem;font-weight:500;transition:.2s}
+.nav-tab:hover,.nav-tab.active{background:rgba(255,255,255,.15);color:#fff}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.user-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);
+  border-radius:20px;padding:5px 12px 5px 5px;cursor:pointer;transition:.15s}
+.user-pill:hover{background:rgba(255,255,255,.18)}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:var(--teal);
+  display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff}
+.user-name{font-size:.82rem;color:rgba(255,255,255,.9);font-weight:500}
+.main{flex:1;padding:20px;max-width:1140px;margin:0 auto;width:100%}
+
+/* ════ CARDS ═════════════════════════════════════════════════════ */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:16px}
+.card-title{font-size:1.05rem;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* ════ STATS ═════════════════════════════════════════════════════ */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:4px}
+.stat-num{font-size:2rem;font-weight:800;color:var(--navy);line-height:1}
+.stat-label{font-size:.78rem;color:var(--slate-500);text-transform:uppercase;letter-spacing:.05em}
+.stat-icon{font-size:1.4rem;margin-bottom:4px}
+
+/* ════ TABLE ═════════════════════════════════════════════════════ */
+.table-wrap{overflow-x:auto;border-radius:var(--radius-sm)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+thead{background:var(--slate-50)}
+th{padding:11px 13px;text-align:left;font-size:.73rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--slate-500);border-bottom:2px solid var(--slate-200)}
+td{padding:11px 13px;border-bottom:1px solid var(--slate-100);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--slate-50)}
+.av{width:34px;height:34px;border-radius:50%;background:var(--teal-light);display:flex;
+  align-items:center;justify-content:center;font-weight:700;color:var(--teal);font-size:.82rem;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.74rem;font-weight:600}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-amber{background:#FFFBEB;color:#92400E}
+.badge-red{background:var(--red-light);color:var(--red)}
+.badge-slate{background:var(--slate-100);color:var(--slate-500)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+
+/* ════ BUTTONS ═══════════════════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;
+  border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;border:none;transition:.18s;white-space:nowrap}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:#0A6B6A;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-ghost{background:var(--slate-100);color:var(--slate-700)}
+.btn-ghost:hover{background:var(--slate-200)}
+.btn-danger{background:var(--red-light);color:var(--red)}
+.btn-danger:hover{background:#FEE2E2}
+.btn-sm{padding:5px 12px;font-size:.8rem}
+.btn-icon{padding:7px;border-radius:50%;border:none;background:transparent;
+  cursor:pointer;color:var(--slate-400);transition:.15s;font-size:1.05rem}
+.btn-icon:hover{background:var(--slate-100);color:var(--text)}
+
+/* ════ FORMS ═════════════════════════════════════════════════════ */
+.form-group{margin-bottom:15px}
+.form-group label{display:block;font-size:.83rem;font-weight:600;color:var(--slate-700);margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:10px 13px;border:1.5px solid var(--slate-200);
+  border-radius:var(--radius-sm);font-size:.93rem;transition:.15s;color:var(--text)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.12)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.req{color:var(--red)}
+
+/* Inline error / success within forms */
+.field-error{color:var(--red);font-size:.8rem;margin-top:4px;display:none}
+.field-error.show{display:block}
+.inline-msg{border-radius:var(--radius-sm);padding:10px 14px;font-size:.85rem;font-weight:600;
+  margin-bottom:14px;display:flex;gap:8px;align-items:center}
+.inline-msg.error{background:var(--red-light);color:var(--red)}
+.inline-msg.success{background:var(--green-light);color:var(--green)}
+.inline-msg.info{background:var(--teal-light);color:var(--teal)}
+.inline-msg.hidden{display:none}
+
+/* ════ KIOSK ═════════════════════════════════════════════════════ */
+.kiosk{position:fixed;inset:0;background:var(--navy);color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:200;text-align:center;padding:24px}
+.kiosk.hidden{display:none}
+.kiosk-logo{font-size:2.8rem;font-weight:800;color:#fff;margin-bottom:6px}
+.kiosk-logo span{color:#5EEAD4}
+.kiosk-sub{color:rgba(255,255,255,.6);margin-bottom:28px;font-size:1rem}
+.kiosk-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+  border-radius:16px;padding:32px;width:100%;max-width:460px}
+.kiosk-step-title{font-size:1.35rem;font-weight:700;margin-bottom:20px;color:#fff}
+.kiosk-input{width:100%;padding:13px 16px;margin-bottom:12px;border:1.5px solid rgba(255,255,255,.2);
+  border-radius:var(--radius-sm);background:rgba(255,255,255,.08);color:#fff;font-size:1rem}
+.kiosk-input::placeholder{color:rgba(255,255,255,.4)}
+.kiosk-input:focus{outline:none;border-color:#5EEAD4;background:rgba(255,255,255,.12)}
+.kiosk-input option{background:var(--navy);color:#fff}
+.kiosk-btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);
+  background:var(--teal);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;transition:.18s;margin-top:8px}
+.kiosk-btn:hover{background:#0A6B6A;transform:translateY(-1px)}
+.kiosk-btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7)}
+.kiosk-btn-ghost:hover{background:rgba(255,255,255,.08);color:#fff;transform:none}
+.step-dots{display:flex;gap:8px;justify-content:center;margin-bottom:22px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:.2s}
+.step-dot.active{background:var(--teal);width:22px;border-radius:4px}
+.step-dot.done{background:rgba(255,255,255,.5)}
+.kiosk-success{display:flex;flex-direction:column;align-items:center;gap:12px}
+.kiosk-check{width:68px;height:68px;background:rgba(5,150,105,.2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:2rem}
+.kiosk-welcome-msg{font-size:1.9rem;font-weight:800;margin-top:6px}
+.kiosk-welcome-sub{color:rgba(255,255,255,.65);font-size:.95rem}
+/* Kiosk inline validation message */
+.kiosk-err{background:rgba(220,38,38,.2);color:#FCA5A5;border-radius:8px;
+  padding:10px 14px;font-size:.88rem;margin-bottom:10px;text-align:left}
+
+/* ════ SEARCH / FILTER ═══════════════════════════════════════════ */
+.search-bar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search-input{flex:1;min-width:180px;padding:9px 13px;
+  border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:.9rem}
+.search-input:focus{outline:none;border-color:var(--teal)}
+.filter-select{padding:9px 13px;border:1.5px solid var(--slate-200);
+  border-radius:var(--radius-sm);font-size:.9rem;background:#fff;color:var(--text)}
+
+/* ════ WALK-IN INLINE PANEL ══════════════════════════════════════ */
+.checkin-panel{background:var(--teal-light);border:1.5px solid rgba(14,124,123,.2);
+  border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.checkin-panel-title{font-weight:700;font-size:1rem;color:var(--teal);margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between}
+
+/* ════ TOAST NOTIFICATION ════════════════════════════════════════ */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;
+  border-radius:var(--radius-sm);padding:13px 18px;font-size:.88rem;font-weight:500;
+  box-shadow:var(--shadow-md);z-index:500;max-width:320px;
+  display:flex;align-items:center;gap:10px;transition:opacity .25s,transform .25s}
+.toast.hidden{opacity:0;transform:translateY(12px);pointer-events:none}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+.toast.info{background:var(--navy)}
+
+/* ════ SECTION HEADER ════════════════════════════════════════════ */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.section-title{font-size:1.2rem;font-weight:800;color:var(--navy)}
+
+/* ════ EMPTY STATE ═══════════════════════════════════════════════ */
+.empty{text-align:center;padding:40px 20px;color:var(--slate-400)}
+.empty-icon{font-size:2.8rem;margin-bottom:10px}
+.empty-text{font-size:.95rem;font-weight:500}
+.empty-sub{font-size:.83rem;margin-top:4px}
+
+/* ════ DATABASE ══════════════════════════════════════════════════ */
+.db-grid{display:grid;grid-template-columns:250px 1fr;gap:16px;align-items:start}
+.db-table-btn{display:flex;align-items:center;gap:8px;padding:9px 12px;
+  border-radius:var(--radius-sm);border:none;background:transparent;
+  width:100%;text-align:left;font-size:.87rem;font-weight:500;cursor:pointer;transition:.15s;color:var(--slate-700)}
+.db-table-btn:hover{background:var(--slate-100)}
+.db-table-btn.active{background:var(--teal-light);color:var(--teal);font-weight:700}
+.db-row-count{margin-left:auto;font-size:.73rem;background:var(--slate-100);
+  color:var(--slate-500);padding:1px 7px;border-radius:10px}
+.db-table-btn.active .db-row-count{background:rgba(14,124,123,.15);color:var(--teal)}
+.db-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.db-toolbar-title{font-weight:700;font-size:.98rem;color:var(--navy);flex:1}
+.conn-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
+  border-radius:20px;font-size:.79rem;font-weight:600}
+.conn-pill.connected{background:var(--green-light);color:var(--green)}
+.conn-pill.disconnected{background:var(--red-light);color:var(--red)}
+.conn-pill.syncing{background:#FFFBEB;color:#92400E}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.schema-field{display:grid;grid-template-columns:180px 155px 1fr;gap:10px;
+  align-items:center;padding:9px 14px;border-bottom:1px solid var(--slate-100);font-size:.85rem}
+.schema-field:last-child{border-bottom:none}
+.schema-col-name{font-weight:600;color:var(--text);font-family:monospace;font-size:.82rem}
+.schema-col-type{color:var(--purple);font-family:monospace;font-size:.79rem}
+.schema-col-note{color:var(--slate-400);font-size:.77rem}
+.schema-pk{background:var(--amber);color:#fff;font-size:.64rem;font-weight:700;
+  padding:1px 5px;border-radius:4px;margin-right:5px}
+.schema-fk{background:var(--teal);color:#fff;font-size:.64rem;font-weight:700;
+  padding:1px 5px;border-radius:4px;margin-right:5px}
+.data-cell{font-family:monospace;font-size:.79rem;max-width:150px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.null-val{color:var(--slate-400);font-style:italic}
+.storage-bar-wrap{background:var(--slate-100);border-radius:6px;height:9px;overflow:hidden;flex:1}
+.storage-bar{background:linear-gradient(90deg,var(--teal),#34D399);height:100%;border-radius:6px}
+/* Connection config inline */
+.conn-form{background:var(--slate-50);border:1.5px solid var(--slate-200);
+  border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.conn-form-title{font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between}
+.conn-field{margin-bottom:12px}
+.conn-field label{display:block;font-size:.79rem;font-weight:600;color:var(--slate-600);margin-bottom:4px}
+.conn-field input,.conn-field select{width:100%;padding:9px 12px;border:1.5px solid var(--slate-200);
+  border-radius:var(--radius-sm);font-size:.87rem;font-family:monospace;color:var(--text);background:#fff}
+.conn-field input:focus,.conn-field select:focus{outline:none;border-color:var(--teal)}
+.provider-note{background:var(--teal-light);border-radius:var(--radius-sm);
+  padding:10px 13px;font-size:.82rem;color:var(--teal);line-height:1.5;margin-bottom:14px}
+
+/* ════ RESPONSIVE ════════════════════════════════════════════════ */
+@media(max-width:700px){
+  .db-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .nav-tab span{display:none}
+  .topbar-brand span{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .main{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     LOGIN SCREEN
+     ══════════════════════════════════════════════════════════════ -->
+<div id="login-screen">
+
+  <!-- Left hero panel -->
+  <div class="login-left">
+    <div class="login-hero-logo">Visitor<span>IQ</span></div>
+    <div class="login-hero-tag">Cloud-Native Visitor Management Platform</div>
+
+    <div class="login-feature">
+      <div class="login-feature-icon">📊</div>
+      <div class="login-feature-text">
+        <span class="login-feature-title">Real-Time Dashboard</span>
+        See every visitor currently on-site, expected arrivals, and overdue check-outs at a glance.
+      </div>
+    </div>
+    <div class="login-feature">
+      <div class="login-feature-icon">📱</div>
+      <div class="login-feature-text">
+        <span class="login-feature-title">QR Pre-Registration</span>
+        Visitors receive a QR code by email and check in touchlessly in under 5 seconds.
+      </div>
+    </div>
+    <div class="login-feature">
+      <div class="login-feature-icon">🔒</div>
+      <div class="login-feature-text">
+        <span class="login-feature-title">GDPR-Compliant & Secure</span>
+        AES-256 encryption, row-level security, and configurable data retention built in.
+      </div>
+    </div>
+    <div class="login-feature">
+      <div class="login-feature-icon">🗄️</div>
+      <div class="login-feature-text">
+        <span class="login-feature-title">Cloud Database Storage</span>
+        All records stored in your chosen cloud provider — Supabase, Neon, Railway, and more.
+      </div>
+    </div>
+  </div>
+
+  <!-- Right auth panel -->
+  <div class="login-right">
+    <div class="login-panel-logo">Visitor<span>IQ</span></div>
+    <div class="login-panel-sub">Visitor Management Platform</div>
+
+    <!-- LOGIN FORM -->
+    <div id="auth-login" style="width:100%">
+      <div class="login-panel-title">Welcome back</div>
+      <div class="login-panel-desc">Sign in to your admin account to continue.</div>
+
+      <div class="login-credentials-hint">
+        <strong>Demo credentials:</strong><br>
+        Username: <strong>admin</strong> &nbsp;·&nbsp; Password: <strong>Admin@1234</strong>
+      </div>
+
+      <div id="login-error" class="auth-error hidden">⚠️ <span id="login-error-text"></span></div>
+
+      <div class="auth-form">
+        <div class="auth-field">
+          <label for="login-username">Username</label>
+          <input class="auth-input" id="login-username" type="text" placeholder="Enter your username"
+            autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <div class="auth-field">
+          <label for="login-password">Password</label>
+          <div class="auth-input-wrap">
+            <input class="auth-input" id="login-password" type="password" placeholder="Enter your password"
+              autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+            <button class="auth-eye" onclick="togglePw('login-password',this)" tabindex="-1">👁</button>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:18px">
+          <button class="auth-link" onclick="showAuth('forgot')">Forgot password?</button>
+        </div>
+        <button class="auth-btn" id="login-btn" onclick="doLogin()">Sign In</button>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD FORM -->
+    <div id="auth-forgot" class="hidden" style="width:100%">
+      <div class="login-panel-title">Reset your password</div>
+      <div class="login-panel-desc">Enter your username and we'll send a reset link to your registered email address.</div>
+
+      <div id="forgot-msg" class="auth-success hidden">✅ <span id="forgot-msg-text"></span></div>
+      <div id="forgot-error" class="auth-error hidden">⚠️ <span id="forgot-error-text"></span></div>
+
+      <div class="auth-form">
+        <div class="auth-field">
+          <label for="forgot-username">Username</label>
+          <input class="auth-input" id="forgot-username" type="text" placeholder="Enter your username"
+            onkeydown="if(event.key==='Enter')doForgot()">
+        </div>
+        <button class="auth-btn" id="forgot-btn" onclick="doForgot()">Send Reset Link</button>
+        <div class="auth-divider">or</div>
+        <button class="auth-link" style="width:100%;text-align:center" onclick="showAuth('login')">← Back to Sign In</button>
+      </div>
+    </div>
+
+    <!-- RESET PASSWORD FORM (shown after forgot flow) -->
+    <div id="auth-reset" class="hidden" style="width:100%">
+      <div class="login-panel-title">Set new password</div>
+      <div class="login-panel-desc">Choose a strong password for your account.</div>
+
+      <div id="reset-error" class="auth-error hidden">⚠️ <span id="reset-error-text"></span></div>
+
+      <div class="auth-form">
+        <div class="auth-field">
+          <label>New Password</label>
+          <div class="auth-input-wrap">
+            <input class="auth-input" id="reset-pw1" type="password" placeholder="Minimum 8 characters"
+              oninput="checkPwStrength()">
+            <button class="auth-eye" onclick="togglePw('reset-pw1',this)" tabindex="-1">👁</button>
+          </div>
+          <div id="pw-strength-bar" style="height:4px;border-radius:2px;margin-top:6px;transition:.3s;background:var(--slate-200)"></div>
+          <div id="pw-strength-label" style="font-size:.75rem;color:var(--slate-400);margin-top:3px"></div>
+        </div>
+        <div class="auth-field">
+          <label>Confirm New Password</label>
+          <div class="auth-input-wrap">
+            <input class="auth-input" id="reset-pw2" type="password" placeholder="Repeat password"
+              onkeydown="if(event.key==='Enter')doReset()">
+            <button class="auth-eye" onclick="togglePw('reset-pw2',this)" tabindex="-1">👁</button>
+          </div>
+        </div>
+        <button class="auth-btn" onclick="doReset()">Update Password</button>
+        <div class="auth-divider">or</div>
+        <button class="auth-link" style="width:100%;text-align:center" onclick="showAuth('login')">← Back to Sign In</button>
+      </div>
+    </div>
+
+  </div><!-- /login-right -->
+</div><!-- /login-screen -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN APPLICATION (hidden until logged in)
+     ══════════════════════════════════════════════════════════════ -->
+<div class="app hidden" id="app-shell">
+
+  <header class="topbar">
+    <div class="topbar-brand">VisitorIQ <span>LIVE</span></div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active"  onclick="showView('dashboard')">📊 <span>Dashboard</span></button>
+      <button class="nav-tab"         onclick="showView('log')">📋 <span>Visitor Log</span></button>
+      <button class="nav-tab"         onclick="showView('preregister')">✉️ <span>Pre-Register</span></button>
+      <button class="nav-tab"         onclick="showView('database')">🗄️ <span>Database</span></button>
+      <button class="nav-tab"         onclick="showView('admin')">⚙️ <span>Admin</span></button>
+    </nav>
+    <div class="topbar-right">
+      <button class="btn btn-sm" style="background:var(--teal);color:#fff;font-size:.8rem" onclick="openKiosk()">🚀 Kiosk</button>
+      <div class="user-pill" onclick="doLogout()">
+        <div class="user-avatar" id="topbar-avatar">A</div>
+        <span class="user-name" id="topbar-username">Admin</span>
+        <span style="color:rgba(255,255,255,.5);font-size:.75rem">· Sign out</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+  <!-- ══ DASHBOARD ══════════════════════════════════════════════ -->
+  <div id="view-dashboard">
+    <div class="section-hdr">
+      <div class="section-title">Reception Dashboard</div>
+      <button class="btn btn-primary btn-sm" onclick="toggleCheckinPanel()">+ Walk-in Check-In</button>
+    </div>
+
+    <!-- Inline walk-in check-in panel (replaces popup modal) -->
+    <div id="checkin-panel" class="checkin-panel hidden">
+      <div class="checkin-panel-title">
+        <span>👤 Walk-In Check-In</span>
+        <button class="btn-icon" onclick="toggleCheckinPanel()" style="color:var(--teal)">✕</button>
+      </div>
+      <div id="checkin-msg" class="inline-msg hidden"></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name <span class="req">*</span></label><input id="wi-fname" placeholder="Jane"></div>
+        <div class="form-group"><label>Last Name <span class="req">*</span></label><input id="wi-lname" placeholder="Smith"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Company</label><input id="wi-company" placeholder="Acme Corp"></div>
+        <div class="form-group"><label>Email</label><input id="wi-email" type="email" placeholder="jane@acme.com"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Host <span class="req">*</span></label><select id="wi-host"><option value="">Select host…</option></select></div>
+        <div class="form-group"><label>Purpose</label><input id="wi-purpose" placeholder="Client meeting, interview…"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="toggleCheckinPanel()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitWalkin()">✓ Check In</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-icon">🟢</div><div class="stat-num" id="stat-onsite">0</div><div class="stat-label">On Site</div></div>
+      <div class="stat"><div class="stat-icon">📅</div><div class="stat-num" id="stat-today">0</div><div class="stat-label">Today Total</div></div>
+      <div class="stat"><div class="stat-icon">⏳</div><div class="stat-num" id="stat-expected">0</div><div class="stat-label">Expected</div></div>
+      <div class="stat"><div class="stat-icon">⚠️</div><div class="stat-num" id="stat-overdue">0</div><div class="stat-label">Overdue</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">👤 Visitors On Site</div>
+      <div class="search-bar">
+        <input class="search-input" id="dash-search" placeholder="Search name or company…" oninput="renderDashboard()">
+        <select class="filter-select" id="dash-filter" onchange="renderDashboard()">
+          <option value="all">All visitors</option>
+          <option value="onsite">On site only</option>
+          <option value="checkedout">Checked out</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Name</th><th>Company</th><th>Host</th><th>Arrived</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="dash-tbody"></tbody>
+        </table>
+      </div>
+      <div id="dash-empty" class="empty hidden"><div class="empty-icon">🏢</div><div class="empty-text">No visitors yet today</div><div class="empty-sub">Use Kiosk Mode or Walk-in Check-In to register visitors</div></div>
+    </div>
+  </div>
+
+  <!-- ══ VISITOR LOG ══════════════════════════════════════════════ -->
+  <div id="view-log" class="hidden">
+    <div class="section-hdr">
+      <div class="section-title">Visitor Log</div>
+      <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇️ Export CSV</button>
+    </div>
+    <div class="card">
+      <div class="search-bar">
+        <input class="search-input" id="log-search" placeholder="Search visitors…" oninput="renderLog()">
+        <input type="date" class="filter-select" id="log-date" oninput="renderLog()">
+        <select class="filter-select" id="log-host" onchange="renderLog()"><option value="">All hosts</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Name</th><th>Company</th><th>Host</th><th>Purpose</th><th>Arrived</th><th>Departed</th><th>Status</th></tr></thead>
+          <tbody id="log-tbody"></tbody>
+        </table>
+      </div>
+      <div id="log-empty" class="empty hidden"><div class="empty-icon">📋</div><div class="empty-text">No records found</div></div>
+      <div id="log-count" style="padding:10px 0 0;font-size:.83rem;color:var(--slate-400)"></div>
+    </div>
+  </div>
+
+  <!-- ══ PRE-REGISTER ═════════════════════════════════════════════ -->
+  <div id="view-preregister" class="hidden">
+    <div class="section-hdr"><div class="section-title">Pre-Register a Visitor</div></div>
+
+    <div id="prereg-msg" class="inline-msg hidden" style="max-width:540px"></div>
+
+    <div class="card" style="max-width:540px">
+      <div class="card-title">✉️ Send Invitation with QR Code</div>
+      <p style="color:var(--slate-500);font-size:.88rem;margin-bottom:18px">The visitor receives an email with a QR code for touchless 5-second check-in on arrival.</p>
+      <div class="form-row">
+        <div class="form-group"><label>First Name <span class="req">*</span></label><input id="pre-fname" placeholder="Jane"></div>
+        <div class="form-group"><label>Last Name <span class="req">*</span></label><input id="pre-lname" placeholder="Smith"></div>
+      </div>
+      <div class="form-group"><label>Visitor Email <span class="req">*</span></label><input id="pre-email" type="email" placeholder="jane@company.com"></div>
+      <div class="form-group"><label>Company</label><input id="pre-company" placeholder="Acme Corp"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Host <span class="req">*</span></label><select id="pre-host"><option value="">Select host…</option></select></div>
+        <div class="form-group"><label>Expected Date <span class="req">*</span></label><input id="pre-date" type="date"></div>
+      </div>
+      <div class="form-group"><label>Expected Time</label><input id="pre-time" type="time" value="10:00"></div>
+      <div class="form-group"><label>Purpose of Visit</label><input id="pre-purpose" placeholder="Client meeting, interview…"></div>
+      <div class="form-actions"><button class="btn btn-primary" onclick="sendPreRegistration()">✉️ Send Invitation</button></div>
+    </div>
+
+    <div class="card" style="max-width:540px">
+      <div class="card-title">📅 Upcoming Pre-Registrations</div>
+      <div id="prereg-list"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No upcoming pre-registrations</div></div></div>
+    </div>
+  </div>
+
+  <!-- ══ DATABASE ═════════════════════════════════════════════════ -->
+  <div id="view-database" class="hidden">
+    <div class="section-hdr">
+      <div class="section-title">🗄️ Database</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="conn-pill connected" id="conn-status-pill"><span class="conn-dot"></span><span id="conn-status-text">Connected</span></div>
+        <button class="btn btn-ghost btn-sm" onclick="toggleConnForm()">🔌 Connection</button>
+      </div>
+    </div>
+
+    <!-- Connection config — inline, no popup -->
+    <div id="conn-form-panel" class="conn-form hidden">
+      <div class="conn-form-title">
+        <span>🔌 Database Connection Settings</span>
+        <button class="btn-icon" onclick="toggleConnForm()">✕</button>
+      </div>
+      <div id="conn-provider-note" class="provider-note"></div>
+      <div class="form-row">
+        <div class="conn-field"><label>Cloud Provider</label>
+          <select id="conn-provider" onchange="updateConnFields()">
+            <option value="supabase">Supabase (PostgreSQL — recommended)</option>
+            <option value="neon">Neon (Serverless PostgreSQL)</option>
+            <option value="railway">Railway (PostgreSQL)</option>
+            <option value="planetscale">PlanetScale (MySQL)</option>
+            <option value="mongodb">MongoDB Atlas</option>
+            <option value="firebase">Firebase Firestore</option>
+            <option value="custom">Custom / Self-hosted</option>
+          </select>
+        </div>
+        <div class="conn-field"><label>Data Region (GDPR)</label>
+          <select id="conn-region">
+            <option value="eu-west-1">🇮🇪 EU — Ireland</option>
+            <option value="eu-central-1">🇩🇪 EU — Frankfurt</option>
+            <option value="us-east-1">🇺🇸 US East — Virginia</option>
+            <option value="us-west-2">🇺🇸 US West — Oregon</option>
+            <option value="ap-southeast-1">🇸🇬 Asia — Singapore</option>
+          </select>
+        </div>
+      </div>
+      <div class="conn-field"><label>Host / URL</label><input id="conn-host" value="db.xxxxxxxxxxxx.supabase.co" style="font-family:monospace"></div>
+      <div class="form-row">
+        <div class="conn-field"><label>Database Name</label><input id="conn-dbname" value="postgres"></div>
+        <div class="conn-field"><label>Port</label><input id="conn-port" value="5432" style="font-family:monospace"></div>
+      </div>
+      <div class="form-row">
+        <div class="conn-field"><label>Username</label><input id="conn-user" value="postgres"></div>
+        <div class="conn-field"><label>Password / API Key</label><input id="conn-pass" type="password" placeholder="••••••••••••••••" autocomplete="new-password"></div>
+      </div>
+      <div style="background:var(--slate-50);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:14px;font-size:.81rem;color:var(--slate-500);line-height:1.5">
+        🔐 Credentials are stored in encrypted environment variables and never sent to the browser. TLS 1.3 is enforced. Row-Level Security policies scope all queries to your organisation automatically.
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="toggleConnForm()">Cancel</button>
+        <button class="btn btn-ghost" onclick="testConnection()">🔄 Test Connection</button>
+        <button class="btn btn-primary" onclick="saveConnection()">💾 Save & Connect</button>
+      </div>
+    </div>
+
+    <!-- Connection summary bar -->
+    <div class="card" style="padding:14px 20px;margin-bottom:12px">
+      <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:center">
+        <div><div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin-bottom:2px">Provider</div><div style="font-weight:700;font-size:.9rem" id="db-provider-label">Supabase (PostgreSQL 15)</div></div>
+        <div><div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin-bottom:2px">Region</div><div style="font-weight:700;font-size:.9rem" id="db-region-label">eu-west-1 (Ireland)</div></div>
+        <div><div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin-bottom:2px">Encryption</div><div style="font-weight:700;font-size:.9rem">AES-256 · TLS 1.3</div></div>
+        <div style="flex:1;min-width:160px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400)">Storage</span>
+            <span id="db-storage-label" style="font-size:.79rem;font-weight:700;color:var(--teal)">4.2 MB / 500 MB</span>
+          </div>
+          <div class="storage-bar-wrap"><div class="storage-bar" style="width:0.84%"></div></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="testConnection()">🔄 Test</button>
+      </div>
+    </div>
+
+    <div class="db-grid">
+      <div class="card" style="padding:16px">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin-bottom:10px">Tables</div>
+        <div id="db-table-list"></div>
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin:14px 0 8px">Cloud Providers</div>
+        <div id="db-provider-buttons"></div>
+      </div>
+      <div class="card" style="padding:16px">
+        <div class="db-toolbar">
+          <div class="db-toolbar-title" id="db-panel-title">Select a table →</div>
+          <button class="btn btn-ghost btn-sm" id="db-toggle-btn" onclick="toggleDbView()" style="display:none">📋 Schema</button>
+          <button class="btn btn-ghost btn-sm" onclick="refreshDbPanel()">🔄</button>
+        </div>
+        <div id="db-panel-content">
+          <div class="empty"><div class="empty-icon">🗄️</div><div class="empty-text">Select a table from the sidebar</div><div class="empty-sub">View schema or browse live data</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" style="margin-top:0">
+      <div class="stat"><div class="stat-icon">📊</div><div class="stat-num" id="db-total-records">0</div><div class="stat-label">Total Records</div></div>
+      <div class="stat"><div class="stat-icon">🔄</div><div class="stat-num" id="db-sync-count">0</div><div class="stat-label">Sync Log Entries</div></div>
+      <div class="stat"><div class="stat-icon">💾</div><div class="stat-num">5</div><div class="stat-label">Tables</div></div>
+      <div class="stat"><div class="stat-icon">🛡️</div><div class="stat-num">RLS</div><div class="stat-label">Row-Level Security</div></div>
+    </div>
+  </div>
+
+  <!-- ══ ADMIN ════════════════════════════════════════════════════ -->
+  <div id="view-admin" class="hidden">
+    <div class="section-hdr"><div class="section-title">Admin Settings</div></div>
+
+    <!-- Admin feedback message -->
+    <div id="admin-msg" class="inline-msg hidden"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+
+      <div class="card">
+        <div class="card-title">🎨 Kiosk Branding</div>
+        <div class="form-group"><label>Organisation Name</label><input id="org-name" value="Acme Corporation"></div>
+        <div class="form-group"><label>Welcome Message</label><input id="org-welcome" value="Welcome! Please sign in below."></div>
+        <div class="form-group"><label>Primary Colour</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="org-color" type="color" value="#0F2A4A" style="width:44px;height:36px;padding:2px;border-radius:6px;border:1.5px solid var(--slate-200)">
+            <input id="org-color-hex" value="#0F2A4A" style="flex:1">
+          </div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveBranding()">💾 Save Branding</button></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">👥 Host Directory</div>
+        <div id="host-list-admin" style="margin-bottom:12px"></div>
+        <div style="display:flex;gap:8px">
+          <input id="new-host-name" placeholder="Full name" style="flex:1;padding:9px 12px;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:.88rem">
+          <input id="new-host-email" placeholder="Email" style="flex:1;padding:9px 12px;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:.88rem">
+          <button class="btn btn-primary btn-sm" onclick="addHost()">+ Add</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🚫 Watchlist</div>
+        <p style="color:var(--slate-500);font-size:.83rem;margin-bottom:12px">Names on this list trigger a security alert at check-in. Names are hashed before storage — no PII is saved in plaintext.</p>
+        <div id="watchlist-admin" style="margin-bottom:12px"></div>
+        <div style="display:flex;gap:8px">
+          <input id="new-watchlist-entry" placeholder="Full name to block" style="flex:1;padding:9px 12px;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:.88rem">
+          <button class="btn btn-danger btn-sm" onclick="addWatchlistEntry()">+ Add</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔒 GDPR Compliance</div>
+        <div class="form-group"><label>Data Retention (days)</label>
+          <select id="retention-days">
+            <option value="30">30 days</option><option value="90" selected>90 days</option>
+            <option value="180">180 days</option><option value="365">1 year</option>
+            <option value="730">2 years</option><option value="0">Keep forever</option>
+          </select>
+        </div>
+        <div class="form-group"><label><input type="checkbox" id="require-consent" checked style="margin-right:6px">Require consent at check-in</label></div>
+        <div class="form-group"><label><input type="checkbox" id="require-photo" style="margin-right:6px">Require photo capture</label></div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="saveCompliance()">💾 Save Settings</button></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">👤 Admin Account</div>
+        <p style="color:var(--slate-500);font-size:.83rem;margin-bottom:14px">Change the password for the admin account.</p>
+        <div id="admin-pw-msg" class="inline-msg hidden"></div>
+        <div class="form-group"><label>Current Password</label>
+          <div class="auth-input-wrap"><input id="admin-cur-pw" type="password" style="width:100%;padding:10px 13px;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:.93rem">
+            <button class="auth-eye" onclick="togglePw('admin-cur-pw',this)" tabindex="-1">👁</button></div>
+        </div>
+        <div class="form-group"><label>New Password</label>
+          <div class="auth-input-wrap"><input id="admin-new-pw" type="password" style="width:100%;padding:10px 13px;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:.93rem">
+            <button class="auth-eye" onclick="togglePw('admin-new-pw',this)" tabindex="-1">👁</button></div>
+        </div>
+        <div class="form-group"><label>Confirm New Password</label>
+          <input id="admin-confirm-pw" type="password" style="width:100%;padding:10px 13px;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:.93rem">
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="changeAdminPassword()">🔑 Update Password</button></div>
+      </div>
+    </div>
+  </div>
+
+  </main>
+</div><!-- /app-shell -->
+
+<!-- ══ KIOSK MODE ════════════════════════════════════════════════ -->
+<div id="kiosk" class="kiosk hidden">
+  <div class="kiosk-logo">Visitor<span>IQ</span></div>
+  <div class="kiosk-sub" id="kiosk-sub-title">Welcome! Please sign in below.</div>
+  <div class="step-dots" id="kiosk-dots"></div>
+  <div class="kiosk-card" id="kiosk-card"></div>
+</div>
+
+<!-- ══ TOAST ═════════════════════════════════════════════════════ -->
+<div id="toast" class="toast hidden"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   AUTH STATE
+   ═══════════════════════════════════════════════════════════════ */
+const ADMIN_USER = { username:'admin', password:'Admin@1234', email:'admin@visitoriq.io', name:'Admin' };
+let currentUser = null;
+
+/* ─── Auth screens ─── */
+function showAuth(screen) {
+  ['login','forgot','reset'].forEach(s => document.getElementById(`auth-${s}`).classList.add('hidden'));
+  document.getElementById(`auth-${screen}`).classList.remove('hidden');
+  // Clear messages when switching
+  ['login-error','forgot-msg','forgot-error','reset-error'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+}
+
+/* ─── Toggle password visibility ─── */
+function togglePw(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+
+/* ─── Login ─── */
+function doLogin() {
+  const un  = document.getElementById('login-username').value.trim();
+  const pw  = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  const errTx = document.getElementById('login-error-text');
+  const btn   = document.getElementById('login-btn');
+
+  errEl.classList.add('hidden');
+
+  if (!un || !pw) {
+    errTx.textContent = 'Please enter your username and password.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  // Simulate async login with a short delay
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+  setTimeout(() => {
+    if (un === ADMIN_USER.username && pw === ADMIN_USER.password) {
+      currentUser = ADMIN_USER;
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app-shell').classList.remove('hidden');
+      document.getElementById('topbar-username').textContent = currentUser.name;
+      document.getElementById('topbar-avatar').textContent = currentUser.name[0].toUpperCase();
+      document.getElementById('login-password').value = '';
+      seedData();
+      document.getElementById('log-date').value = new Date().toISOString().slice(0,10);
+      showView('dashboard');
+      showToast('✅ Signed in successfully — welcome, ' + currentUser.name + '!', 'success');
+    } else {
+      errTx.textContent = 'Incorrect username or password. Please try again.';
+      errEl.classList.remove('hidden');
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-password').focus();
+    }
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+  }, 700);
+}
+
+/* ─── Forgot password ─── */
+function doForgot() {
+  const un    = document.getElementById('forgot-username').value.trim();
+  const msgEl = document.getElementById('forgot-msg');
+  const msgTx = document.getElementById('forgot-msg-text');
+  const errEl = document.getElementById('forgot-error');
+  const errTx = document.getElementById('forgot-error-text');
+  const btn   = document.getElementById('forgot-btn');
+
+  msgEl.classList.add('hidden'); errEl.classList.add('hidden');
+
+  if (!un) {
+    errTx.textContent = 'Please enter your username.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Sending…';
+  setTimeout(() => {
+    if (un === ADMIN_USER.username) {
+      msgTx.textContent = `A password reset link has been sent to ${ADMIN_USER.email}. Check your inbox and follow the instructions.`;
+      msgEl.classList.remove('hidden');
+      document.getElementById('forgot-username').value = '';
+      // For demo: show the reset form after 2 s
+      setTimeout(() => { showAuth('reset'); }, 2200);
+    } else {
+      errTx.textContent = 'No account found with that username. Please check and try again.';
+      errEl.classList.remove('hidden');
+    }
+    btn.disabled = false; btn.textContent = 'Send Reset Link';
+  }, 900);
+}
+
+/* ─── Password strength ─── */
+function checkPwStrength() {
+  const pw = document.getElementById('reset-pw1').value;
+  const bar = document.getElementById('pw-strength-bar');
+  const lbl = document.getElementById('pw-strength-label');
+  if (!pw) { bar.style.background='var(--slate-200)'; bar.style.width='0'; lbl.textContent=''; return; }
+  let score = 0;
+  if (pw.length >= 8)  score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const levels = ['','Weak','Fair','Good','Strong','Very Strong'];
+  const colors = ['','var(--red)','var(--amber)','var(--amber)','var(--teal)','var(--green)'];
+  bar.style.width = (score * 20) + '%';
+  bar.style.background = colors[score] || 'var(--slate-200)';
+  lbl.textContent = levels[score] || '';
+  lbl.style.color = colors[score] || 'var(--slate-400)';
+}
+
+/* ─── Reset password ─── */
+function doReset() {
+  const pw1 = document.getElementById('reset-pw1').value;
+  const pw2 = document.getElementById('reset-pw2').value;
+  const errEl = document.getElementById('reset-error');
+  const errTx = document.getElementById('reset-error-text');
+  errEl.classList.add('hidden');
+  if (!pw1 || pw1.length < 8) {
+    errTx.textContent = 'Password must be at least 8 characters.'; errEl.classList.remove('hidden'); return;
+  }
+  if (pw1 !== pw2) {
+    errTx.textContent = 'Passwords do not match.'; errEl.classList.remove('hidden'); return;
+  }
+  // In production: call API to update password
+  ADMIN_USER.password = pw1;
+  showAuth('login');
+  showToast('✅ Password updated — please sign in with your new password.', 'success');
+  document.getElementById('reset-pw1').value = '';
+  document.getElementById('reset-pw2').value = '';
+}
+
+/* ─── Logout ─── */
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app-shell').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  showAuth('login');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   APP STATE
+   ═══════════════════════════════════════════════════════════════ */
+let state = {
+  visitors: [], preRegs: [],
+  hosts: [
+    { id:'h1', name:'Alice Johnson', email:'alice@example.com', dept:'Sales' },
+    { id:'h2', name:'Bob Williams',  email:'bob@example.com',   dept:'Engineering' },
+    { id:'h3', name:'Carol Davis',   email:'carol@example.com', dept:'HR' },
+    { id:'h4', name:'David Lee',     email:'david@example.com', dept:'Finance' },
+  ],
+  watchlist: [],
+  branding:   { name:'Acme Corporation', welcome:'Welcome! Please sign in below.', color:'#0F2A4A' },
+  compliance: { retention:90, consent:true, photo:false },
+  connection: { provider:'supabase', host:'db.xxxxxxxxxxxx.supabase.co', dbname:'postgres', port:'5432', user:'postgres', region:'eu-west-1', connected:true },
+};
+
+function seedData() {
+  const ago = m => { const d=new Date(); d.setMinutes(d.getMinutes()-m); return d.toISOString(); };
+  state.visitors = [
+    { id:'v1', firstName:'James',  lastName:'Carter',   company:'TechCorp',    hostId:'h1', purpose:'Client meeting', checkedInAt:ago(90),  checkedOutAt:null,    email:'james@techcorp.com',  watchlistMatch:false },
+    { id:'v2', firstName:'Sarah',  lastName:'Mitchell', company:'BuildCo',     hostId:'h2', purpose:'Project review', checkedInAt:ago(150), checkedOutAt:ago(45), email:'sarah@buildco.com',   watchlistMatch:false },
+    { id:'v3', firstName:'Ahmed',  lastName:'Hassan',   company:'Consulting+', hostId:'h3', purpose:'HR interview',   checkedInAt:ago(30),  checkedOutAt:null,    email:'ahmed@consulting.io', watchlistMatch:false },
+    { id:'v4', firstName:'Liu',    lastName:'Wei',      company:'FinTech Ltd', hostId:'h4', purpose:'Finance audit',  checkedInAt:ago(200), checkedOutAt:ago(10), email:'liu@fintech.com',     watchlistMatch:false },
+  ];
+  state.preRegs = [
+    { id:'pr1', firstName:'Emma', lastName:'Roberts', email:'emma@startup.io', company:'StartupCo',
+      hostId:'h1', expectedDate:tmr(), expectedTime:'09:30', purpose:'Partnership discussion', qrToken:'EMROBQR1' },
+  ];
+}
+const tmr = () => { const d=new Date(); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); };
+
+/* ═══════════════════════════════════════════════════════════════
+   VIEWS
+   ═══════════════════════════════════════════════════════════════ */
+const VIEWS = ['dashboard','log','preregister','database','admin'];
+function showView(name) {
+  VIEWS.forEach(v => document.getElementById(`view-${v}`).classList.toggle('hidden', v!==name));
+  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', VIEWS[i]===name));
+  if(name==='dashboard')   { populateHostSelect('wi-host'); renderDashboard(); }
+  if(name==='log')         { renderLog(); populateLogHostFilter(); }
+  if(name==='preregister') { populateHostSelect('pre-host'); renderPreRegs(); }
+  if(name==='database')    renderDbView();
+  if(name==='admin')       { renderHostAdmin(); renderWatchlistAdmin(); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+const hostName = id => state.hosts.find(h=>h.id===id)?.name ?? id;
+const initials = (f,l) => `${(f||'')[0]||''}${(l||'')[0]||''}`.toUpperCase();
+const timeStr  = iso => iso ? new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '—';
+const dateStr  = iso => iso ? new Date(iso).toLocaleDateString([],{day:'2-digit',month:'short',year:'numeric'}) : '—';
+const isToday  = iso => iso && iso.slice(0,10)===new Date().toISOString().slice(0,10);
+const isOverdue = v  => !v.checkedOutAt && (Date.now()-new Date(v.checkedInAt).getTime())>4*3600*1000;
+const av = v => `<div class="av">${initials(v.firstName,v.lastName)}</div>`;
+function statusBadge(v) {
+  if(v.watchlistMatch)              return '<span class="badge badge-red">⚠ Flagged</span>';
+  if(!v.checkedOutAt&&isOverdue(v)) return '<span class="badge badge-amber">⏰ Overdue</span>';
+  if(!v.checkedOutAt)               return '<span class="badge badge-green">● On Site</span>';
+  return '<span class="badge badge-slate">✓ Departed</span>';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST (replaces all alert/popup)
+   ═══════════════════════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg, type='info') {
+  clearTimeout(toastTimer);
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type}`;
+  el.classList.remove('hidden');
+  toastTimer = setTimeout(() => el.classList.add('hidden'), 4500);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD
+   ═══════════════════════════════════════════════════════════════ */
+let checkinPanelOpen = false;
+function toggleCheckinPanel() {
+  checkinPanelOpen = !checkinPanelOpen;
+  document.getElementById('checkin-panel').classList.toggle('hidden', !checkinPanelOpen);
+  document.getElementById('checkin-msg').classList.add('hidden');
+  if(checkinPanelOpen) document.getElementById('wi-fname').focus();
+}
+
+function renderDashboard() {
+  const q  = (document.getElementById('dash-search')?.value||'').toLowerCase();
+  const f  = document.getElementById('dash-filter')?.value||'all';
+  const tv = state.visitors.filter(v=>isToday(v.checkedInAt));
+  const on = tv.filter(v=>!v.checkedOutAt);
+  document.getElementById('stat-onsite').textContent   = on.length;
+  document.getElementById('stat-today').textContent    = tv.length;
+  document.getElementById('stat-expected').textContent = state.preRegs.filter(p=>p.expectedDate===new Date().toISOString().slice(0,10)).length;
+  document.getElementById('stat-overdue').textContent  = on.filter(isOverdue).length;
+  let rows = tv;
+  if(f==='onsite')     rows=rows.filter(v=>!v.checkedOutAt);
+  if(f==='checkedout') rows=rows.filter(v=>!!v.checkedOutAt);
+  if(q) rows=rows.filter(v=>`${v.firstName} ${v.lastName} ${v.company||''}`.toLowerCase().includes(q));
+  const tbody=document.getElementById('dash-tbody');
+  const empty=document.getElementById('dash-empty');
+  if(!rows.length){tbody.innerHTML='';empty.classList.remove('hidden');return;}
+  empty.classList.add('hidden');
+  tbody.innerHTML=rows.map(v=>`<tr>
+    <td>${av(v)}</td>
+    <td><div style="font-weight:600">${v.firstName} ${v.lastName}</div>${v.email?`<div style="font-size:.76rem;color:var(--slate-400)">${v.email}</div>`:''}</td>
+    <td>${v.company||'—'}</td><td>${hostName(v.hostId)}</td><td>${timeStr(v.checkedInAt)}</td>
+    <td>${statusBadge(v)}</td>
+    <td>${!v.checkedOutAt
+      ?`<button class="btn btn-danger btn-sm" onclick="checkOut('${v.id}')">Check Out</button>`
+      :`<span style="color:var(--slate-400);font-size:.8rem">${timeStr(v.checkedOutAt)}</span>`}</td>
+  </tr>`).join('');
+}
+
+function checkOut(id) {
+  const v=state.visitors.find(x=>x.id===id);
+  if(v){v.checkedOutAt=new Date().toISOString();syncLog.push({id:syncLog.length+1,entityType:'visitors',entityId:id,operation:'update',created_at:new Date().toISOString(),sync_version:syncLog.length+1});}
+  renderDashboard(); refreshDbStats();
+  showToast(`✓ ${v?.firstName} ${v?.lastName} checked out`, 'success');
+}
+
+function populateHostSelect(id) {
+  const sel=document.getElementById(id); if(!sel) return;
+  sel.innerHTML='<option value="">Select host…</option>'+
+    state.hosts.map(h=>`<option value="${h.id}">${h.name} (${h.dept})</option>`).join('');
+}
+
+function submitWalkin() {
+  const fn  = document.getElementById('wi-fname').value.trim();
+  const ln  = document.getElementById('wi-lname').value.trim();
+  const hid = document.getElementById('wi-host').value;
+  const msgEl = document.getElementById('checkin-msg');
+  msgEl.classList.add('hidden');
+  if(!fn||!ln||!hid){
+    msgEl.className='inline-msg error'; msgEl.textContent='⚠ Please fill in First Name, Last Name, and Host.';
+    msgEl.classList.remove('hidden'); return;
+  }
+  const name=`${fn} ${ln}`;
+  const matched=state.watchlist.some(w=>w.toLowerCase()===name.toLowerCase());
+  const v={id:'v'+Date.now(),firstName:fn,lastName:ln,
+    company:document.getElementById('wi-company').value.trim(),
+    email:document.getElementById('wi-email').value.trim(),
+    hostId:hid,purpose:document.getElementById('wi-purpose').value.trim(),
+    checkedInAt:new Date().toISOString(),checkedOutAt:null,watchlistMatch:matched};
+  state.visitors.push(v);
+  syncLog.push({id:syncLog.length+1,entityType:'visitors',entityId:v.id,operation:'insert',created_at:new Date().toISOString(),sync_version:syncLog.length+1});
+  ['wi-fname','wi-lname','wi-company','wi-email','wi-purpose'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+  document.getElementById('wi-host').value='';
+  msgEl.className='inline-msg success'; msgEl.textContent=`✅ ${name} checked in — ${hostName(hid)} has been notified.`;
+  msgEl.classList.remove('hidden');
+  refreshDbStats(); renderDashboard();
+  if(matched) showToast(`⚠️ SECURITY ALERT: ${name} matches the watchlist!`, 'error');
+  else        showToast(`✅ ${name} checked in successfully`, 'success');
+  setTimeout(()=>{if(checkinPanelOpen){checkinPanelOpen=false;document.getElementById('checkin-panel').classList.add('hidden');}},2000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VISITOR LOG
+   ═══════════════════════════════════════════════════════════════ */
+function renderLog() {
+  const q=( document.getElementById('log-search')?.value||'').toLowerCase();
+  const d=document.getElementById('log-date')?.value||'';
+  const h=document.getElementById('log-host')?.value||'';
+  let rows=[...state.visitors].sort((a,b)=>new Date(b.checkedInAt)-new Date(a.checkedInAt));
+  if(q) rows=rows.filter(v=>`${v.firstName} ${v.lastName} ${v.company||''} ${v.purpose||''}`.toLowerCase().includes(q));
+  if(d) rows=rows.filter(v=>v.checkedInAt.slice(0,10)===d);
+  if(h) rows=rows.filter(v=>v.hostId===h);
+  const tbody=document.getElementById('log-tbody');
+  const empty=document.getElementById('log-empty');
+  document.getElementById('log-count').textContent=`${rows.length} record${rows.length!==1?'s':''}`;
+  if(!rows.length){tbody.innerHTML='';empty.classList.remove('hidden');return;}
+  empty.classList.add('hidden');
+  tbody.innerHTML=rows.map(v=>`<tr>
+    <td>${av(v)}</td>
+    <td><div style="font-weight:600">${v.firstName} ${v.lastName}</div>${v.company?`<div style="font-size:.76rem;color:var(--slate-400)">${v.company}</div>`:''}</td>
+    <td>${v.company||'—'}</td><td>${hostName(v.hostId)}</td>
+    <td style="max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v.purpose||'—'}</td>
+    <td><div>${dateStr(v.checkedInAt)}</div><div style="font-size:.76rem;color:var(--slate-400)">${timeStr(v.checkedInAt)}</div></td>
+    <td>${v.checkedOutAt?`<div>${dateStr(v.checkedOutAt)}</div><div style="font-size:.76rem;color:var(--slate-400)">${timeStr(v.checkedOutAt)}</div>`:'—'}</td>
+    <td>${statusBadge(v)}</td>
+  </tr>`).join('');
+}
+function populateLogHostFilter() {
+  const sel=document.getElementById('log-host');
+  sel.innerHTML='<option value="">All hosts</option>'+state.hosts.map(h=>`<option value="${h.id}">${h.name}</option>`).join('');
+}
+function exportCSV() {
+  const rows=state.visitors.map(v=>[v.firstName,v.lastName,v.company||'',v.email||'',
+    hostName(v.hostId),v.purpose||'',v.checkedInAt,v.checkedOutAt||'',v.watchlistMatch?'FLAGGED':'OK']);
+  const csv=['First Name,Last Name,Company,Email,Host,Purpose,Checked In,Checked Out,Screening',
+    ...rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(','))].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=`visitor-log-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('📥 CSV exported successfully', 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRE-REGISTRATION
+   ═══════════════════════════════════════════════════════════════ */
+function sendPreRegistration() {
+  const fn=document.getElementById('pre-fname').value.trim();
+  const ln=document.getElementById('pre-lname').value.trim();
+  const em=document.getElementById('pre-email').value.trim();
+  const hid=document.getElementById('pre-host').value;
+  const dt=document.getElementById('pre-date').value;
+  const msgEl=document.getElementById('prereg-msg');
+  msgEl.classList.add('hidden');
+  if(!fn||!ln||!em||!hid||!dt){
+    msgEl.className='inline-msg error'; msgEl.textContent='⚠ Please fill in all required fields.';
+    msgEl.classList.remove('hidden'); return;
+  }
+  const pr={id:'pr'+Date.now(),firstName:fn,lastName:ln,email:em,
+    company:document.getElementById('pre-company').value.trim(),
+    hostId:hid,expectedDate:dt,
+    expectedTime:document.getElementById('pre-time').value,
+    purpose:document.getElementById('pre-purpose').value.trim(),
+    qrToken:Math.random().toString(36).slice(2,10).toUpperCase()};
+  state.preRegs.push(pr);
+  syncLog.push({id:syncLog.length+1,entityType:'pre_registrations',entityId:pr.id,operation:'insert',created_at:new Date().toISOString(),sync_version:syncLog.length+1});
+  ['pre-fname','pre-lname','pre-email','pre-company','pre-purpose'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+  document.getElementById('pre-host').value='';
+  msgEl.className='inline-msg success';
+  msgEl.textContent=`✅ Invitation sent to ${fn} ${ln} at ${em} — QR code: ${pr.qrToken}`;
+  msgEl.classList.remove('hidden');
+  renderPreRegs(); refreshDbStats();
+  showToast(`✉️ Invitation sent to ${fn} ${ln}`, 'success');
+}
+function renderPreRegs() {
+  const el=document.getElementById('prereg-list');
+  if(!state.preRegs.length){el.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No upcoming pre-registrations</div></div>';return;}
+  el.innerHTML=state.preRegs.map(p=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--slate-100)">
+      <div>
+        <div style="font-weight:600">${p.firstName} ${p.lastName}</div>
+        <div style="font-size:.8rem;color:var(--slate-400)">${p.expectedDate} ${p.expectedTime||''} · Host: ${hostName(p.hostId)}</div>
+        <div style="font-size:.76rem;color:var(--teal);font-family:monospace;margin-top:2px">QR: ${p.qrToken||'—'}</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="checkInFromPreReg('${p.id}')">✓ Arrive</button>
+    </div>`).join('');
+}
+function checkInFromPreReg(id) {
+  const pr=state.preRegs.find(p=>p.id===id); if(!pr) return;
+  const v={id:'v'+Date.now(),firstName:pr.firstName,lastName:pr.lastName,company:pr.company,
+    email:pr.email,hostId:pr.hostId,purpose:pr.purpose,
+    checkedInAt:new Date().toISOString(),checkedOutAt:null,watchlistMatch:false,qrToken:pr.qrToken};
+  state.visitors.push(v);
+  state.preRegs=state.preRegs.filter(p=>p.id!==id);
+  syncLog.push({id:syncLog.length+1,entityType:'visitors',entityId:v.id,operation:'insert',created_at:new Date().toISOString(),sync_version:syncLog.length+1});
+  renderPreRegs(); refreshDbStats();
+  showToast(`✅ ${pr.firstName} ${pr.lastName} checked in via QR`, 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DATABASE
+   ═══════════════════════════════════════════════════════════════ */
+const DB_TABLES = {
+  visitors:          { label:'Visitors',           icon:'👤', schema:[{col:'id',type:'UUID',note:'Primary Key',pk:true},{col:'organisation_id',type:'UUID',note:'FK → organisations',fk:true},{col:'first_name',type:'TEXT NOT NULL',note:''},{col:'last_name',type:'TEXT NOT NULL',note:''},{col:'company',type:'TEXT',note:'Optional'},{col:'email',type:'TEXT',note:'CITEXT'},{col:'host_id',type:'UUID',note:'FK → people',fk:true},{col:'purpose',type:'TEXT',note:''},{col:'photo_url',type:'TEXT',note:'Cloudflare R2 URL'},{col:'qr_token',type:'TEXT UNIQUE',note:'NULL for walk-ins'},{col:'checked_in_at',type:'TIMESTAMPTZ NOT NULL',note:''},{col:'checked_out_at',type:'TIMESTAMPTZ',note:'NULL until departure'},{col:'watchlist_match',type:'BOOLEAN',note:'Flagged by screening'},{col:'consent_given_at',type:'TIMESTAMPTZ',note:'GDPR consent time'}] },
+  organisations:     { label:'Organisations',      icon:'🏢', schema:[{col:'id',type:'UUID',note:'Primary Key',pk:true},{col:'name',type:'TEXT NOT NULL',note:''},{col:'plan',type:'TEXT',note:'starter | professional | enterprise'},{col:'primary_color',type:'TEXT',note:'Hex'},{col:'logo_url',type:'TEXT',note:''},{col:'subdomain',type:'TEXT UNIQUE',note:'e.g. acme'},{col:'created_at',type:'TIMESTAMPTZ',note:''}] },
+  people:            { label:'People (Hosts)',      icon:'👥', schema:[{col:'id',type:'UUID',note:'Primary Key',pk:true},{col:'organisation_id',type:'UUID',note:'FK → organisations',fk:true},{col:'full_name',type:'TEXT NOT NULL',note:''},{col:'email',type:'CITEXT UNIQUE',note:''},{col:'phone',type:'TEXT',note:'For SMS'},{col:'department',type:'TEXT',note:''},{col:'sms_enabled',type:'BOOLEAN',note:''},{col:'webhook_url',type:'TEXT',note:'Slack / Teams'},{col:'is_active',type:'BOOLEAN',note:'Soft-delete'}] },
+  pre_registrations: { label:'Pre-Registrations',  icon:'📅', schema:[{col:'id',type:'UUID',note:'Primary Key',pk:true},{col:'organisation_id',type:'UUID',note:'FK → organisations',fk:true},{col:'first_name',type:'TEXT NOT NULL',note:''},{col:'last_name',type:'TEXT NOT NULL',note:''},{col:'email',type:'TEXT NOT NULL',note:''},{col:'host_id',type:'UUID',note:'FK → people',fk:true},{col:'expected_at',type:'TIMESTAMPTZ',note:''},{col:'qr_token',type:'TEXT UNIQUE',note:'One-time'},{col:'confirmation_sent',type:'BOOLEAN',note:''}] },
+  sync_log:          { label:'Sync Log',            icon:'🔄', schema:[{col:'id',type:'BIGSERIAL',note:'Append-only PK',pk:true},{col:'organisation_id',type:'UUID',note:'FK → organisations',fk:true},{col:'entity_type',type:'TEXT NOT NULL',note:''},{col:'entity_id',type:'UUID NOT NULL',note:''},{col:'operation',type:'TEXT NOT NULL',note:'insert | update | delete'},{col:'device_id',type:'TEXT',note:'PWA offline device'},{col:'sync_version',type:'BIGINT',note:'Lamport clock'},{col:'payload',type:'JSONB',note:'Full row snapshot'},{col:'created_at',type:'TIMESTAMPTZ',note:'Append-only — never deleted'}] },
+};
+const DB_PROVIDERS = {
+  supabase:    {badge:'Supabase',    color:'#3ECF8E', note:'Managed PostgreSQL with built-in RLS, Auth, and real-time. Recommended — free tier 500MB, GDPR-compliant EU regions.'},
+  neon:        {badge:'Neon',        color:'#00E599', note:'Serverless PostgreSQL. Pay-per-use, auto-scales to zero when idle. EU regions for GDPR.'},
+  railway:     {badge:'Railway',     color:'#B344F0', note:'Managed PostgreSQL inside Railway containers. Zero-config networking with the API container.'},
+  planetscale: {badge:'PlanetScale', color:'#5C5CEB', note:'Serverless MySQL with branching. Good for read-heavy workloads. EU and US regions.'},
+  mongodb:     {badge:'MongoDB Atlas',color:'#00ED64', note:'Document database for flexible schema. Free 512MB tier. EU clusters for GDPR.'},
+  firebase:    {badge:'Firebase',    color:'#FFA000', note:'Google Firestore — excellent native offline sync. Scales automatically. EU regional endpoints.'},
+  custom:      {badge:'Custom',      color:'#64748B', note:'Self-hosted PostgreSQL/MySQL on your own server or VPS. Requires manual TLS and backups.'},
+};
+let dbActiveTable=null, dbViewMode='data';
+const syncLog=[];
+
+function refreshDbStats() {
+  document.getElementById('db-total-records').textContent = state.visitors.length+state.hosts.length+state.preRegs.length+1;
+  document.getElementById('db-sync-count').textContent = syncLog.length;
+}
+function renderDbView() {
+  refreshDbStats(); updateConnPill();
+  const counts={visitors:state.visitors.length,organisations:1,people:state.hosts.length,pre_registrations:state.preRegs.length,sync_log:syncLog.length};
+  document.getElementById('db-table-list').innerHTML=Object.entries(DB_TABLES).map(([k,t])=>`
+    <button class="db-table-btn ${dbActiveTable===k?'active':''}" onclick="selectDbTable('${k}')">
+      <span>${t.icon}</span><span>${t.label}</span><span class="db-row-count">${counts[k]}</span>
+    </button>`).join('');
+  document.getElementById('db-provider-buttons').innerHTML=Object.entries(DB_PROVIDERS).map(([k,p])=>`
+    <button class="db-table-btn ${state.connection.provider===k?'active':''}" onclick="quickSwitchProvider('${k}')" style="font-size:.8rem">
+      <span style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;display:inline-block"></span>
+      <span>${p.badge}</span>
+    </button>`).join('');
+  if(dbActiveTable) renderDbPanel();
+}
+function selectDbTable(k){ dbActiveTable=k; dbViewMode='data'; renderDbView(); renderDbPanel(); }
+function toggleDbView(){ dbViewMode=dbViewMode==='data'?'schema':'data'; document.getElementById('db-toggle-btn').textContent=dbViewMode==='data'?'📋 Schema':'📊 Data'; renderDbPanel(); }
+function refreshDbPanel(){ refreshDbStats(); if(dbActiveTable)renderDbPanel(); showToast('🔄 Database view refreshed','info'); }
+function renderDbPanel(){
+  if(!dbActiveTable) return;
+  const t=DB_TABLES[dbActiveTable];
+  document.getElementById('db-panel-title').textContent=`${t.icon} ${t.label}`;
+  const togBtn=document.getElementById('db-toggle-btn');
+  togBtn.style.display='inline-flex'; togBtn.textContent=dbViewMode==='data'?'📋 Schema':'📊 Data';
+  const c=document.getElementById('db-panel-content');
+  if(dbViewMode==='schema'){
+    c.innerHTML=`<div style="margin-bottom:10px;font-size:.8rem;color:var(--slate-400)">
+      Row-Level Security <strong style="color:var(--green)">enabled</strong> — all queries automatically scoped to <code style="background:var(--slate-100);padding:1px 5px;border-radius:3px;font-size:.78rem">organisation_id</code>
+    </div>
+    <div style="border:1px solid var(--slate-200);border-radius:var(--radius-sm);overflow:hidden">
+      <div style="background:var(--slate-50);padding:8px 14px;border-bottom:2px solid var(--slate-200);
+                  display:grid;grid-template-columns:180px 155px 1fr;gap:10px;
+                  font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--slate-400)">
+        <span>Column</span><span>Type</span><span>Notes</span>
+      </div>
+      ${t.schema.map(f=>`<div class="schema-field">
+        <span class="schema-col-name">${f.pk?'<span class="schema-pk">PK</span>':''}${f.fk?'<span class="schema-fk">FK</span>':''}${f.col}</span>
+        <span class="schema-col-type">${f.type}</span>
+        <span class="schema-col-note">${f.note}</span>
+      </div>`).join('')}
+    </div>`;
+  } else {
+    const data=getLiveData(dbActiveTable);
+    if(!data.length){c.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No records</div></div>';return;}
+    const cols=Object.keys(data[0]).slice(0,6);
+    c.innerHTML=`<p style="font-size:.8rem;color:var(--slate-400);margin-bottom:9px">${data.length} record${data.length!==1?'s':''} · first 6 columns shown</p>
+    <div class="table-wrap"><table>
+      <thead><tr>${cols.map(col=>`<th>${col}</th>`).join('')}</tr></thead>
+      <tbody>${data.map(row=>`<tr>${cols.map(col=>{const v=row[col];return v===null||v===undefined?`<td><span class="null-val">null</span></td>`:`<td class="data-cell" title="${String(v)}">${String(v).length>26?String(v).slice(0,26)+'…':String(v)}</td>`;}).join('')}</tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+}
+function getLiveData(t){
+  if(t==='visitors')          return state.visitors.map(v=>({id:v.id,first_name:v.firstName,last_name:v.lastName,company:v.company||null,host_id:v.hostId,checked_in_at:v.checkedInAt,checked_out_at:v.checkedOutAt||null}));
+  if(t==='organisations')     return [{id:'org-001',name:state.branding.name,plan:'professional',primary_color:state.branding.color,subdomain:'acme',created_at:'2026-01-15T09:00:00Z'}];
+  if(t==='people')            return state.hosts.map(h=>({id:h.id,full_name:h.name,email:h.email,department:h.dept||null,sms_enabled:false,is_active:true}));
+  if(t==='pre_registrations') return state.preRegs.map(p=>({id:p.id,first_name:p.firstName,last_name:p.lastName,email:p.email,host_id:p.hostId,expected_at:p.expectedDate+' '+p.expectedTime,qr_token:p.qrToken}));
+  if(t==='sync_log')          return syncLog.map(s=>({id:s.id,entity_type:s.entityType,entity_id:s.entityId,operation:s.operation,sync_version:s.sync_version,created_at:s.created_at}));
+  return [];
+}
+function updateConnPill(){
+  const pill=document.getElementById('conn-status-pill');
+  const text=document.getElementById('conn-status-text');
+  pill.className=`conn-pill ${state.connection.connected?'connected':'disconnected'}`;
+  text.textContent=state.connection.connected?'Connected':'Disconnected';
+}
+function quickSwitchProvider(k){
+  state.connection.provider=k;
+  document.getElementById('db-provider-label').textContent=DB_PROVIDERS[k].badge;
+  renderDbView(); showToast(`🔌 Switched to ${DB_PROVIDERS[k].badge}`,'info');
+}
+let connFormOpen=false;
+function toggleConnForm(){
+  connFormOpen=!connFormOpen;
+  document.getElementById('conn-form-panel').classList.toggle('hidden',!connFormOpen);
+  if(connFormOpen) updateConnFields();
+}
+function updateConnFields(){
+  const k=document.getElementById('conn-provider').value;
+  document.getElementById('conn-provider-note').textContent=DB_PROVIDERS[k].note;
+  const ports={supabase:'5432',planetscale:'3306',neon:'5432',railway:'5432',mongodb:'27017',firebase:'N/A',custom:'5432'};
+  document.getElementById('conn-port').value=ports[k]||'5432';
+}
+function testConnection(){
+  const pill=document.getElementById('conn-status-pill');
+  const text=document.getElementById('conn-status-text');
+  pill.className='conn-pill syncing'; text.textContent='Testing…';
+  showToast('🔄 Testing connection…','info');
+  setTimeout(()=>{
+    state.connection.connected=true; updateConnPill();
+    const r=document.getElementById('conn-region')?.value||state.connection.region;
+    document.getElementById('db-region-label').textContent=r;
+    showToast('✅ Connection successful — latency 11ms','success');
+  },1300);
+}
+function saveConnection(){
+  state.connection={
+    provider:document.getElementById('conn-provider').value,
+    host:document.getElementById('conn-host').value,
+    dbname:document.getElementById('conn-dbname').value,
+    port:document.getElementById('conn-port').value,
+    user:document.getElementById('conn-user').value,
+    region:document.getElementById('conn-region').value,
+    connected:false,
+  };
+  connFormOpen=false; document.getElementById('conn-form-panel').classList.add('hidden');
+  document.getElementById('db-provider-label').textContent=DB_PROVIDERS[state.connection.provider].badge;
+  renderDbView(); testConnection();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN
+   ═══════════════════════════════════════════════════════════════ */
+function showAdminMsg(msg, type='success'){
+  const el=document.getElementById('admin-msg');
+  el.className=`inline-msg ${type}`; el.textContent=msg; el.classList.remove('hidden');
+  setTimeout(()=>el.classList.add('hidden'),3500);
+}
+function renderHostAdmin(){
+  document.getElementById('host-list-admin').innerHTML=state.hosts.map(h=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--slate-100)">
+      <div><div style="font-weight:600;font-size:.88rem">${h.name}</div><div style="font-size:.76rem;color:var(--slate-400)">${h.email}</div></div>
+      <button class="btn-icon" onclick="removeHost('${h.id}')" title="Remove">🗑</button>
+    </div>`).join('');
+}
+function addHost(){
+  const name=document.getElementById('new-host-name').value.trim();
+  const email=document.getElementById('new-host-email').value.trim();
+  if(!name||!email){showAdminMsg('Please enter both a name and email.','error');return;}
+  state.hosts.push({id:'h'+Date.now(),name,email,dept:''});
+  document.getElementById('new-host-name').value='';
+  document.getElementById('new-host-email').value='';
+  renderHostAdmin(); showAdminMsg(`✅ ${name} added to host directory`);
+  showToast(`👤 ${name} added`,'success');
+}
+function removeHost(id){ state.hosts=state.hosts.filter(h=>h.id!==id); renderHostAdmin(); }
+function renderWatchlistAdmin(){
+  const el=document.getElementById('watchlist-admin');
+  if(!state.watchlist.length){el.innerHTML='<p style="color:var(--slate-400);font-size:.83rem">No entries on the watchlist.</p>';return;}
+  el.innerHTML=state.watchlist.map((w,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--slate-100)">
+      <span style="font-size:.88rem">${w}</span>
+      <button class="btn-icon" onclick="removeWatchlistEntry(${i})" title="Remove">🗑</button>
+    </div>`).join('');
+}
+function addWatchlistEntry(){
+  const v=document.getElementById('new-watchlist-entry').value.trim();
+  if(!v){showAdminMsg('Enter a name to block.','error');return;}
+  state.watchlist.push(v); document.getElementById('new-watchlist-entry').value='';
+  renderWatchlistAdmin(); showAdminMsg(`🚫 "${v}" added to watchlist`,'error');
+}
+function removeWatchlistEntry(i){state.watchlist.splice(i,1);renderWatchlistAdmin();}
+function saveBranding(){
+  state.branding.name=document.getElementById('org-name').value;
+  state.branding.welcome=document.getElementById('org-welcome').value;
+  state.branding.color=document.getElementById('org-color').value;
+  showAdminMsg('✅ Branding saved successfully');
+  showToast('✅ Branding saved','success');
+}
+function saveCompliance(){
+  state.compliance.retention=+document.getElementById('retention-days').value;
+  state.compliance.consent=document.getElementById('require-consent').checked;
+  state.compliance.photo=document.getElementById('require-photo').checked;
+  showAdminMsg('✅ Compliance settings saved');
+  showToast('✅ Compliance settings saved','success');
+}
+document.getElementById('org-color').addEventListener('input',e=>{
+  document.getElementById('org-color-hex').value=e.target.value;
+});
+function changeAdminPassword(){
+  const cur=document.getElementById('admin-cur-pw').value;
+  const nw =document.getElementById('admin-new-pw').value;
+  const cf =document.getElementById('admin-confirm-pw').value;
+  const msgEl=document.getElementById('admin-pw-msg');
+  msgEl.classList.add('hidden');
+  if(cur!==ADMIN_USER.password){
+    msgEl.className='inline-msg error'; msgEl.textContent='⚠ Current password is incorrect.'; msgEl.classList.remove('hidden'); return;
+  }
+  if(nw.length<8){
+    msgEl.className='inline-msg error'; msgEl.textContent='⚠ New password must be at least 8 characters.'; msgEl.classList.remove('hidden'); return;
+  }
+  if(nw!==cf){
+    msgEl.className='inline-msg error'; msgEl.textContent='⚠ New passwords do not match.'; msgEl.classList.remove('hidden'); return;
+  }
+  ADMIN_USER.password=nw;
+  ['admin-cur-pw','admin-new-pw','admin-confirm-pw'].forEach(id=>{document.getElementById(id).value='';});
+  msgEl.className='inline-msg success'; msgEl.textContent='✅ Password updated successfully.'; msgEl.classList.remove('hidden');
+  showToast('🔑 Admin password updated','success');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KIOSK MODE
+   ═══════════════════════════════════════════════════════════════ */
+let kioskStep=0, kioskForm={};
+const KSTEPS=['welcome','details','host','legal','confirm','done'];
+function openKiosk(){
+  kioskStep=0; kioskForm={};
+  document.getElementById('kiosk-sub-title').textContent=state.branding.welcome;
+  document.getElementById('kiosk').classList.remove('hidden');
+  document.getElementById('kiosk').style.background=state.branding.color||'#0F2A4A';
+  renderKiosk();
+}
+function closeKiosk(){document.getElementById('kiosk').classList.add('hidden');renderDashboard();}
+function renderKioskDots(){
+  document.getElementById('kiosk-dots').innerHTML=KSTEPS.map((s,i)=>
+    `<div class="step-dot ${i<kioskStep?'done':''} ${i===kioskStep?'active':''}"></div>`).join('');
+}
+function showKioskErr(msg){
+  const existing=document.querySelector('.kiosk-err');
+  if(existing) existing.remove();
+  const el=document.createElement('div');
+  el.className='kiosk-err'; el.textContent=msg;
+  document.getElementById('kiosk-card').insertBefore(el,document.getElementById('kiosk-card').firstChild);
+}
+function renderKiosk(){
+  renderKioskDots();
+  const card=document.getElementById('kiosk-card');
+  const step=KSTEPS[kioskStep];
+  if(step==='welcome'){
+    card.innerHTML=`
+      <div class="kiosk-step-title">👋 Welcome to ${state.branding.name}</div>
+      <p style="color:rgba(255,255,255,.65);margin-bottom:24px;font-size:.95rem">How would you like to check in?</p>
+      <button class="kiosk-btn" onclick="kioskStep++;renderKiosk()">📝 Sign In as New Visitor</button>
+      <button class="kiosk-btn kiosk-btn-ghost" style="margin-top:8px" onclick="kioskQR()">📱 I Have a QR Code</button>
+      <button class="kiosk-btn kiosk-btn-ghost" onclick="closeKiosk()" style="margin-top:20px;font-size:.83rem;opacity:.6">← Exit Kiosk Mode</button>`;
+  } else if(step==='details'){
+    card.innerHTML=`
+      <div class="kiosk-step-title">1 of 3 — Your Details</div>
+      <input class="kiosk-input" id="k-fname" placeholder="First Name *" value="${kioskForm.firstName||''}">
+      <input class="kiosk-input" id="k-lname" placeholder="Last Name *" value="${kioskForm.lastName||''}">
+      <input class="kiosk-input" id="k-company" placeholder="Company (optional)" value="${kioskForm.company||''}">
+      <input class="kiosk-input" id="k-email" type="email" placeholder="Email (optional)" value="${kioskForm.email||''}">
+      <input class="kiosk-input" id="k-purpose" placeholder="Purpose of visit (optional)" value="${kioskForm.purpose||''}">
+      <button class="kiosk-btn" onclick="kioskSaveDetails()">Continue →</button>
+      <button class="kiosk-btn kiosk-btn-ghost" onclick="kioskStep=0;renderKiosk()">← Back</button>`;
+  } else if(step==='host'){
+    const opts=state.hosts.map(h=>`<option value="${h.id}" ${kioskForm.hostId===h.id?'selected':''}>${h.name}</option>`).join('');
+    card.innerHTML=`
+      <div class="kiosk-step-title">2 of 3 — Who are you visiting?</div>
+      <select class="kiosk-input" id="k-host"><option value="">Select host…</option>${opts}</select>
+      <button class="kiosk-btn" style="margin-top:8px" onclick="kioskSaveHost()">Continue →</button>
+      <button class="kiosk-btn kiosk-btn-ghost" onclick="kioskStep--;renderKiosk()">← Back</button>`;
+  } else if(step==='legal'){
+    card.innerHTML=`
+      <div class="kiosk-step-title">3 of 3 — Terms & Consent</div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:14px;text-align:left;
+                  font-size:.86rem;color:rgba(255,255,255,.8);max-height:130px;overflow-y:auto;margin-bottom:14px;line-height:1.5">
+        <strong>Visitor Policy:</strong> Your data is stored securely under GDPR and deleted after ${state.compliance.retention} days.
+        It will not be shared with third parties.<br><br>
+        <strong>CCTV:</strong> CCTV is in operation in all common areas.
+      </div>
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-align:left;
+                    color:rgba(255,255,255,.85);font-size:.88rem;margin-bottom:18px">
+        <input type="checkbox" id="k-consent" style="width:18px;height:18px;margin-top:2px;flex-shrink:0">
+        I have read and agree to the visitor policy.
+      </label>
+      <button class="kiosk-btn" onclick="kioskSaveLegal()">I Agree & Continue →</button>
+      <button class="kiosk-btn kiosk-btn-ghost" onclick="kioskStep--;renderKiosk()">← Back</button>`;
+  } else if(step==='confirm'){
+    const h=state.hosts.find(x=>x.id===kioskForm.hostId);
+    card.innerHTML=`
+      <div class="kiosk-step-title">Confirm Your Details</div>
+      <div style="text-align:left;background:rgba(255,255,255,.08);border-radius:10px;padding:14px;margin-bottom:18px;font-size:.9rem;line-height:1.8">
+        <div><strong>Name:</strong> ${kioskForm.firstName} ${kioskForm.lastName}</div>
+        ${kioskForm.company?`<div><strong>Company:</strong> ${kioskForm.company}</div>`:''}
+        <div><strong>Visiting:</strong> ${h?.name||'—'}</div>
+        ${kioskForm.purpose?`<div><strong>Purpose:</strong> ${kioskForm.purpose}</div>`:''}
+      </div>
+      <button class="kiosk-btn" onclick="kioskCheckIn()">✓ Confirm Check-In</button>
+      <button class="kiosk-btn kiosk-btn-ghost" onclick="kioskStep--;renderKiosk()">← Back</button>`;
+  } else if(step==='done'){
+    card.innerHTML=`
+      <div class="kiosk-success">
+        <div class="kiosk-check">✅</div>
+        <div class="kiosk-welcome-msg">Welcome, ${kioskForm.firstName}!</div>
+        <div class="kiosk-welcome-sub">${hostName(kioskForm.hostId)} has been notified and will be with you shortly.</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,.1);border-radius:8px;padding:11px 18px;font-size:.83rem;color:rgba(255,255,255,.6)">
+          Please take a seat in the waiting area.
+        </div>
+        <button class="kiosk-btn" style="margin-top:22px;max-width:220px" onclick="kioskReset()">Next Visitor →</button>
+      </div>`;
+  }
+}
+function kioskReset(){kioskStep=0;kioskForm={};renderKiosk();}
+function kioskQR(){
+  // In production this uses html5-qrcode camera API.
+  // Demo: show an inline text field instead of browser prompt
+  const card=document.getElementById('kiosk-card');
+  card.innerHTML=`
+    <div class="kiosk-step-title">📱 Enter QR Token</div>
+    <p style="color:rgba(255,255,255,.65);font-size:.9rem;margin-bottom:16px">Type the code from your invitation email, or scan with a QR reader.</p>
+    <input class="kiosk-input" id="qr-token-input" placeholder="e.g. EMROBQR1" style="text-transform:uppercase;letter-spacing:.1em;font-size:1.1rem;text-align:center">
+    <div id="qr-err" style="display:none" class="kiosk-err"></div>
+    <button class="kiosk-btn" onclick="processQR()">✓ Check In with QR</button>
+    <button class="kiosk-btn kiosk-btn-ghost" onclick="kioskStep=0;renderKiosk()">← Back</button>`;
+}
+function processQR(){
+  const token=(document.getElementById('qr-token-input')?.value||'').trim().toUpperCase();
+  const errEl=document.getElementById('qr-err');
+  if(!token){errEl.textContent='Please enter your QR code token.';errEl.style.display='block';return;}
+  const pr=state.preRegs.find(p=>p.qrToken===token);
+  if(!pr){errEl.textContent='QR code not found or already used. Please try again or sign in manually.';errEl.style.display='block';return;}
+  kioskForm={firstName:pr.firstName,lastName:pr.lastName,company:pr.company,
+              email:pr.email,hostId:pr.hostId,purpose:pr.purpose,qrToken:pr.qrToken};
+  state.preRegs=state.preRegs.filter(p=>p.id!==pr.id);
+  kioskCheckIn();
+}
+function kioskSaveDetails(){
+  const fn=document.getElementById('k-fname')?.value.trim();
+  const ln=document.getElementById('k-lname')?.value.trim();
+  if(!fn||!ln){showKioskErr('First and last name are required.');return;}
+  kioskForm.firstName=fn; kioskForm.lastName=ln;
+  kioskForm.company=document.getElementById('k-company')?.value.trim();
+  kioskForm.email=document.getElementById('k-email')?.value.trim();
+  kioskForm.purpose=document.getElementById('k-purpose')?.value.trim();
+  kioskStep++; renderKiosk();
+}
+function kioskSaveHost(){
+  const hid=document.getElementById('k-host')?.value;
+  if(!hid){showKioskErr('Please select who you are visiting.');return;}
+  kioskForm.hostId=hid; kioskStep++; renderKiosk();
+}
+function kioskSaveLegal(){
+  if(!document.getElementById('k-consent')?.checked){showKioskErr('Please read and accept the visitor policy to continue.');return;}
+  kioskForm.consentGiven=true; kioskStep++; renderKiosk();
+}
+function kioskCheckIn(){
+  const name=`${kioskForm.firstName} ${kioskForm.lastName}`;
+  const matched=state.watchlist.some(w=>w.toLowerCase()===name.toLowerCase());
+  const v={id:'v'+Date.now(),...kioskForm,checkedInAt:new Date().toISOString(),checkedOutAt:null,watchlistMatch:matched};
+  state.visitors.push(v);
+  syncLog.push({id:syncLog.length+1,entityType:'visitors',entityId:v.id,operation:'insert',created_at:new Date().toISOString(),sync_version:syncLog.length+1});
+  refreshDbStats();
+  if(matched){
+    // Show inline warning in kiosk — no browser alert
+    const warn=document.createElement('div');
+    warn.style.cssText='background:rgba(220,38,38,.25);border:1px solid rgba(220,38,38,.4);border-radius:10px;padding:14px;margin-bottom:14px;color:#FCA5A5;font-size:.9rem';
+    warn.innerHTML='⚠️ <strong>Security Notice:</strong> Your name has been flagged. A member of staff has been notified and will assist you shortly.';
+    document.getElementById('kiosk-card').insertBefore(warn,document.getElementById('kiosk-card').firstChild);
+  }
+  kioskStep=KSTEPS.indexOf('done'); renderKiosk();
+}
+</script>
+</body>
+</html>
